@@ -1,6 +1,6 @@
 import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 
-enum TicketType {
+export enum TicketType {
     TrainTicket,
 }
 
@@ -16,5 +16,11 @@ export class Ticket {
     position: string;
 
     @Column()
+    attachment: string;
+
+    @Column()
     price: number;
+
+    @Column({type: "json"})
+    data: string;
 }
