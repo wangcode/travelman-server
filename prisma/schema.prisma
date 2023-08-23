@@ -1,0 +1,41 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+enum CredentialProvider {
+  email
+  mobile
+  google
+}
+
+enum CredentialStatus {
+  normal
+}
+
+model User {
+  id          String       @id @default(uuid())
+  email       String       @unique
+  username    String       @unique
+  password    String
+  createAt    DateTime     @default(now())
+  updateAt    DateTime     @updatedAt
+  credentials Credential[]
+}
+
+model Credential {
+  id            String             @id @default(uuid())
+  provider      CredentialProvider
+  credentialKey String
+  status        CredentialStatus   @default(normal)
+  data          Json
+  createAt      DateTime           @default(now())
+  updateAt      DateTime           @updatedAt
+  User          User?              @relation(fields: [userId], references: [id])
+  userId        String?
+}
