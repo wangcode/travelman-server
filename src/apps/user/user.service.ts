@@ -1,9 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '@common/prisma/prisma.service';
+import { OracleObjectStorage } from '@common/storage/oracle';
 
 @Injectable()
 export class UserService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private oracleService: OracleObjectStorage,
+  ) {}
 
   async findById(id: string) {
     const user = await this.prisma.user.findUnique({
