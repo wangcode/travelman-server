@@ -1,27 +1,31 @@
 import { Injectable } from '@nestjs/common';
-import { objectstorage, common } from 'oci-sdk';
+import { ObjectStorageClient, models, requests } from 'oci-objectstorage';
+// import type { models, requests } from 'oci-objectstorage';
+import { SimpleAuthenticationDetailsProvider } from 'oci-common';
+
+export const { AccessType } = models.CreatePreauthenticatedRequestDetails;
 
 export interface PresignedUrlPayload {
   bucket: string;
   key: string;
   expires?: Date;
-  type: objectstorage.models.CreatePreauthenticatedRequestDetails.AccessType;
+  type: models.CreatePreauthenticatedRequestDetails.AccessType;
 }
 
 @Injectable()
 export class OracleObjectStorage {
-  provider: common.SimpleAuthenticationDetailsProvider;
-  client: objectstorage.ObjectStorageClient;
+  private provider: SimpleAuthenticationDetailsProvider;
+  private client: ObjectStorageClient;
 
   constructor() {
-    this.provider = new common.SimpleAuthenticationDetailsProvider(
+    this.provider = new SimpleAuthenticationDetailsProvider(
       process.env.ORACLE_TENANCY,
       process.env.ORACLE_USER,
       process.env.ORACLE_FINGERPRINT,
       process.env.ORACLE_PRIVATEKEY,
       null,
     );
-    this.client = new objectstorage.ObjectStorageClient({
+    this.client = new ObjectStorageClient({
       authenticationDetailsProvider: this.provider,
     });
   }
@@ -34,21 +38,21 @@ export class OracleObjectStorage {
 
     const { key, type, bucket, expires = currentDatetime } = payload;
 
-    const details: objectstorage.models.CreatePreauthenticatedRequestDetails = {
+    const details: models.CreatePreauthenticatedRequestDetails = {
       name: '',
       objectName: key,
       accessType: type,
       timeExpires: expires,
     };
 
-    const request: objectstorage.requests.CreatePreauthenticatedRequestRequest =
-      {
-        bucketName: bucket,
-        namespaceName: '',
-        createPreauthenticatedRequestDetails: details,
-      };
+    const request: requests.CreatePreauthenticatedRequestRequest = {
+      bucketName: bucket,
+      namespaceName: 'nrq8pe5rifqq',
+      createPreauthenticatedRequestDetails: details,
+    };
 
     const resp = await this.client.createPreauthenticatedRequest(request);
+    console.log(resp);
     return resp.preauthenticatedRequest;
   };
 }

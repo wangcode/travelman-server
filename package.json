@@ -28,7 +28,8 @@
     "@nestjs/swagger": "^7.1.8",
     "@prisma/client": "^5.2.0",
     "bcrypt": "^5.1.1",
-    "oci-sdk": "^2.68.2",
+    "oci-common": "^2.69.0",
+    "oci-objectstorage": "^2.69.0",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.8.1"
   },
