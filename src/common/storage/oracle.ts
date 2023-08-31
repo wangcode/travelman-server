@@ -28,31 +28,55 @@ export class OracleObjectStorage {
     this.client = new ObjectStorageClient({
       authenticationDetailsProvider: this.provider,
     });
+
   }
 
-  listObjects = () => {};
+  listObjects = () => { };
 
   getPreSignedUrl = async (payload: PresignedUrlPayload) => {
-    const currentDatetime = new Date();
-    currentDatetime.setSeconds(currentDatetime.getSeconds() + 3600);
 
-    const { key, type, bucket, expires = currentDatetime } = payload;
+    const provider = new SimpleAuthenticationDetailsProvider(
+      process.env.ORACLE_TENANCY,
+      process.env.ORACLE_USER,
+      process.env.ORACLE_FINGERPRINT,
+      process.env.ORACLE_PRIVATEKEY,
+      null,
+    );
+    console.log(process.env.ORACLE_TENANCY,
+      process.env.ORACLE_USER,
+      process.env.ORACLE_FINGERPRINT,
+      process.env.ORACLE_PRIVATEKEY,)
+    const client = new ObjectStorageClient({
+      authenticationDetailsProvider: provider,
+    });
 
-    const details: models.CreatePreauthenticatedRequestDetails = {
-      name: '',
-      objectName: key,
-      accessType: type,
-      timeExpires: expires,
-    };
+    const buckets = await client.getBucket({
+      namespaceName: "nrq8pe5rifqq",
+      bucketName: "travelman"
+    })
+    console.log(buckets)
+    return buckets;
 
-    const request: requests.CreatePreauthenticatedRequestRequest = {
-      bucketName: bucket,
-      namespaceName: 'nrq8pe5rifqq',
-      createPreauthenticatedRequestDetails: details,
-    };
+    // const currentDatetime = new Date();
+    // currentDatetime.setSeconds(currentDatetime.getSeconds() + 3600);
 
-    const resp = await this.client.createPreauthenticatedRequest(request);
-    console.log(resp);
-    return resp.preauthenticatedRequest;
+    // const { key, type, bucket, expires = currentDatetime } = payload;
+
+    // const details: models.CreatePreauthenticatedRequestDetails = {
+    //   name: '111111',
+    //   objectName: key,
+    //   accessType: type,
+    //   timeExpires: expires,
+    // };
+
+    // const request: requests.CreatePreauthenticatedRequestRequest = {
+    //   bucketName: bucket,
+    //   namespaceName: 'nrq8pe5rifqq',
+    //   createPreauthenticatedRequestDetails: details,
+    // };
+
+    // const resp = await this.client.createPreauthenticatedRequest(request);
+    // console.log(resp);
+    // return resp.preauthenticatedRequest;
   };
 }
