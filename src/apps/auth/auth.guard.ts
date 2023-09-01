@@ -8,7 +8,10 @@ import { Request } from 'express';
 
 import { JwtService } from '@nestjs/jwt';
 
-// import { authConfig } from "@common/config";
+export interface JWTUser {
+  sub: string;
+  email: string;
+}
 
 @Injectable()
 export class AuthGuard implements CanActivate {
@@ -22,7 +25,7 @@ export class AuthGuard implements CanActivate {
 
     try {
       const payload = await this.jwtService.verifyAsync(token, {
-        secret: '123123123123',
+        secret: 'liujiawang',
       });
       request['user'] = payload;
     } catch {
@@ -33,7 +36,7 @@ export class AuthGuard implements CanActivate {
   }
 
   private extractTokenFromHeader(request: Request): string | undefined {
-    const [type, token] = request.headers.authorization?.split('') ?? [];
+    const [type, token] = request.headers.authorization?.split(' ') ?? [];
     return type === 'Bearer' ? token : undefined;
   }
 }

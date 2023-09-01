@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import { ObjectStorageClient, models, requests } from 'oci-objectstorage';
-// import type { models, requests } from 'oci-objectstorage';
 import { SimpleAuthenticationDetailsProvider, Region } from 'oci-common';
 
 export const { AccessType } = models.CreatePreauthenticatedRequestDetails;
@@ -8,6 +7,7 @@ export const { AccessType } = models.CreatePreauthenticatedRequestDetails;
 export interface PresignedUrlPayload {
   bucket: string;
   key: string;
+  namespace: string;
   expires?: Date;
   type: models.CreatePreauthenticatedRequestDetails.AccessType;
 }
@@ -37,7 +37,7 @@ export class OracleObjectStorage {
     const currentDatetime = new Date();
     currentDatetime.setSeconds(currentDatetime.getSeconds() + 3600);
 
-    const { key, type, bucket, expires = currentDatetime } = payload;
+    const { key, type, bucket, namespace, expires = currentDatetime } = payload;
 
     const details: models.CreatePreauthenticatedRequestDetails = {
       name: key,
@@ -48,7 +48,7 @@ export class OracleObjectStorage {
 
     const request: requests.CreatePreauthenticatedRequestRequest = {
       bucketName: bucket,
-      namespaceName: 'nrq8pe5rifqq',
+      namespaceName: namespace,
       createPreauthenticatedRequestDetails: details,
     };
 

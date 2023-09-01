@@ -6,15 +6,13 @@ import { AuthService } from '@apps/auth/auth.service';
 
 import { UserModule } from '@apps/user/user.module';
 
-// import { authConfig } from "@common/config";
-
 @Module({
   imports: [
     UserModule,
     JwtModule.register({
       global: true,
-      secret: '123123123',
-      signOptions: { expiresIn: '60s' },
+      secret: 'liujiawang',
+      signOptions: { expiresIn: '1d' },
     }),
   ],
   controllers: [AuthController],

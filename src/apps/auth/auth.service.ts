@@ -1,6 +1,6 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import bcrypt from 'bcrypt';
+import { hash, compare } from 'bcrypt';
 
 import { UserService } from '@apps/user/user.service';
 
@@ -38,14 +38,14 @@ export class AuthService {
       email: userData.email,
       password: newPassword,
     });
-    return userId;
+    return { userId };
   }
 
   private async validatePassword(plainText: string, password: string) {
-    return await bcrypt.compare(plainText, password);
+    return await compare(plainText, password);
   }
 
   private async hashText(plainText: string) {
-    return await bcrypt.hash(plainText, this.saltRounds);
+    return await hash(plainText, this.saltRounds);
   }
 }

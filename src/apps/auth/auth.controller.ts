@@ -9,13 +9,9 @@ import { SigninDto, SignupDto } from '@common/dto/auth.dto';
 export class AuthController {
   constructor(private authService: AuthService) {}
 
-  @UseGuards(AuthGuard)
-  @Get('profile')
-  getProfile() {}
-
   @Post('signin')
   @ApiBody({ type: SigninDto })
-  async signIn(data: SigninDto) {
+  async signIn(@Body() data: SigninDto) {
     return this.authService.signIn(data);
   }
 
