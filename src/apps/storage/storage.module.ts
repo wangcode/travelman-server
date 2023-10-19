@@ -9,4 +9,4 @@ import { StorageService } from './storage.service';
   controllers: [StorageController],
   providers: [StorageService, OracleObjectStorage],
 })
-export class StorageModule {}
+export class StorageModule { }

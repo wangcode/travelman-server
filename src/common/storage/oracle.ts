@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { ObjectStorageClient, models, requests } from 'oci-objectstorage';
-import { SimpleAuthenticationDetailsProvider, Region } from 'oci-common';
+import { SimpleAuthenticationDetailsProvider, ConfigFileAuthenticationDetailsProvider, Region } from 'oci-common';
 
 export const { AccessType } = models.CreatePreauthenticatedRequestDetails;
 
@@ -11,6 +11,8 @@ export interface PresignedUrlPayload {
   expires?: Date;
   type: models.CreatePreauthenticatedRequestDetails.AccessType;
 }
+
+export type OracleAuthentication = SimpleAuthenticationDetailsProvider & ConfigFileAuthenticationDetailsProvider;
 
 @Injectable()
 export class OracleObjectStorage {
@@ -31,7 +33,7 @@ export class OracleObjectStorage {
     });
   }
 
-  listObjects = () => {};
+  listObjects = () => { };
 
   getPreSignedUrl = async (payload: PresignedUrlPayload) => {
     const currentDatetime = new Date();
